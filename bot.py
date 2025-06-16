@@ -10,7 +10,7 @@ logging.basicConfig(
 )
 
 # Получаем токен из переменной окружения
-TOKEN = os.getenv("TOKEN")  # Убедитесь, что вы передали его на Render
+TOKEN = os.getenv("TOKEN")  # Убедитесь, что вы указали его на Render или другой платформе
 
 # Обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -34,7 +34,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await query.message.reply_document(document=file, filename='Авансовый_отчет.xlsx')
             with open('templates/Научный_отчет.docx', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Научный_отчет.docx')
-            with open('templates/Заявление.docx', 'rb') как file:
+            with open('templates/Заявление.docx', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Заявление.docx')
         except Exception as e:
             await query.message.reply_text(f"Ошибка при отправке файлов: {e}")
@@ -46,7 +46,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         Служебная записка согласовывается:
         • Научным руководителем (руководителем научной группы)
         • Руководителем проекта
-        • Карташовой М.С. (каб. 201)
+        • Карташова М.С. (каб. 201)
 
         После согласования передается Колесниченко С.В. (каб. 205):
         • По России – за 7 рабочих дней до начала поездки
@@ -62,7 +62,6 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
     """Логирует все ошибки и отправляет сообщение пользователю"""
     logging.error(f"Update {update} вызвал ошибку {context.error}")
 
-    # Можно попытаться отправить сообщение пользователю
     if isinstance(update, Update) and update.effective_message:
         try:
             await update.effective_message.reply_text(
@@ -80,7 +79,7 @@ def main():
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CallbackQueryHandler(button_handler))
 
-    # Добавляем глобальный обработчик ошибок
+    # Добавляем обработчик ошибок
     application.add_error_handler(error_handler)
 
     print("Бот запущен...")
