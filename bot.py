@@ -1,7 +1,7 @@
 import os
 import logging
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes, ErrorHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # Включаем логирование
 logging.basicConfig(
@@ -34,7 +34,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await query.message.reply_document(document=file, filename='Авансовый_отчет.xlsx')
             with open('templates/Научный_отчет.docx', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Научный_отчет.docx')
-            with open('templates/Заявление.docx', 'rb') as file:
+            with open('templates/Заявление.docx', 'rb') как file:
                 await query.message.reply_document(document=file, filename='Заявление.docx')
         except Exception as e:
             await query.message.reply_text(f"Ошибка при отправке файлов: {e}")
@@ -46,7 +46,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         Служебная записка согласовывается:
         • Научным руководителем (руководителем научной группы)
         • Руководителем проекта
-        • Карташова М.С. (каб. 201)
+        • Карташовой М.С. (каб. 201)
 
         После согласования передается Колесниченко С.В. (каб. 205):
         • По России – за 7 рабочих дней до начала поездки
@@ -56,12 +56,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         await query.edit_message_text(text=info_text)
 
+
 # Обработчик ошибок
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Логирует все ошибки и отправляет сообщение пользователю"""
     logging.error(f"Update {update} вызвал ошибку {context.error}")
-    
-    # Можно добавить отправку сообщения администратору или пользователю
+
+    # Можно попытаться отправить сообщение пользователю
     if isinstance(update, Update) and update.effective_message:
         try:
             await update.effective_message.reply_text(
@@ -69,6 +70,7 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
             )
         except Exception as send_error:
             logging.error(f"Не удалось отправить сообщение об ошибке: {send_error}")
+
 
 # Основная функция запуска бота
 def main():
@@ -83,6 +85,7 @@ def main():
 
     print("Бот запущен...")
     application.run_polling()
+
 
 if __name__ == '__main__':
     main()
