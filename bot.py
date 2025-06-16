@@ -1,3 +1,4 @@
+import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
@@ -8,8 +9,8 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Токен, который вы получили от @BotFather
-TOKEN = '7287080732:AAGrHaKkkxDGKVQv5FR88pjAeqYMADr0cgw'
+# Токен из переменной окружения или напрямую
+TOKEN = "7287080732:AAHTUgSL5Lkhv8pe0F0PWL9MWc_Ec8RssnI"  # ← обновлённый токен
 
 # Обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -45,11 +46,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         Служебная записка согласовывается:
         • Научным руководителем (руководителем научной группы)
         • Руководителем проекта
-        • Карташовой М.С. (каб. 201)
+        • Карташова М.С. (каб. 201)
 
         После согласования передается Колесниченко С.В. (каб. 205):
-        • По России – за 7 рабочих дней до поездки
-        • Зарубежом – за 5 недель до поездки
+        • По России – за 7 рабочих дней до начала поездки
+        • Зарубежом – за 5 недель до начала поездки
 
         Подробности уточняйте у ответственных лиц.
         """
