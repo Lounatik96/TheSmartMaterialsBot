@@ -28,13 +28,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if query.data == 'templates':
         try:
-            with open('templates/Заявка.docm', 'rb') как file:
+            with open('templates/Заявка.docm', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Заявка.docm')
-            with open('templates/Авансовый_отчет.xlsx', 'rb') как file:
+            with open('templates/Авансовый_отчет.xlsx', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Авансовый_отчет.xlsx')
-            with open('templates/Научный_отчет.docx', 'rb') как file:
+            with open('templates/Научный_отчет.docx', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Научный_отчет.docx')
-            with open('templates/Заявление.docx', 'rb') как file:
+            with open('templates/Заявление.docx', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Заявление.docx')
         except Exception as e:
             await query.message.reply_text(f"Ошибка при отправке файлов: {e}")
