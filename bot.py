@@ -9,15 +9,15 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Токен из переменной окружения
+# Получаем токен из переменной окружения
 TOKEN = os.getenv("TOKEN")  # или вставьте напрямую для тестирования: TOKEN = 'ваш_токен'
 
-# Информация о командировке (структурированная)
+# Структурированная информация
 INFO_TEXT = {
     'main': """
     <b>Добро пожаловать в TheSmartMaterialsBot</b>
 
-    Я помогу вам подготовиться к командировке. Ниже вы найдете важную информацию о том, как правильно оформить документы и избежать ошибок.
+    Я помогу вам подготовиться к командировке. Ниже вы найдете важную информацию по оформлению документов.
 
     <u>Основные разделы:</u>
     • /start – начать работу
@@ -26,7 +26,7 @@ INFO_TEXT = {
 
     Для получения информации выберите один из разделов ниже.
     """,
-
+    
     'info': """
     <b>1. Подготовка служебной записки</b>
     
@@ -46,8 +46,8 @@ INFO_TEXT = {
     • Документы принимаются только при наличии всех подписей
     • Нарушение сроков предоставления информации → командировка не оформляется
     • Цель командировки должна соответствовать целям проекта
-    • Даты должны совпадать с билетами
-    • Командировка не может совпадать с отпуском (нужно уведомить Карташову М.С.)
+    • Даты должны совпадать с датами по билетам
+    • Командировка не может совпадать с отпуском
     """,
 
     'project_2030': """
@@ -69,7 +69,7 @@ INFO_TEXT = {
     • Выбор места в поезде
     • Билеты бизнес/первый класс
     • Сервисный сбор сторонних сервисов
-    • Питание и дополнительные услуги
+    • Питание и прочие услуги
     """,
 
     'accommodation': """
@@ -159,8 +159,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(INFO_TEXT['main'], parse_mode='HTML', reply_markup=reply_markup)
 
-
-# Обработчик кнопок
+# Обработчик нажатий на кнопки
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -173,31 +172,35 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await query.message.reply_document(document=file, filename='Заявка.docm')
             with open('templates/Авансовый_отчет.xlsx', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Авансовый_отчет.xlsx')
-            with open('templates/Научный_отчет.docx', 'rb') as file:
+            with open('templates/Научный_отчет.docx', 'rb') как file:
                 await query.message.reply_document(document=file, filename='Научный_отчет.docx')
-            with open('templates/Заявление.docx', 'rb') as file:
+            with open('templates/Заявление.docx', 'rb') как file:
                 await query.message.reply_document(document=file, filename='Заявление.docx')
-        except Exception as e:
+        except Exception как e:
             await query.message.reply_text(f"Ошибка при отправке файлов: {e}")
+
+    elif data == 'back_to_menu':
+        await back_to_menu(update, context)
 
     else:
         text = INFO_TEXT.get(data, "Раздел временно недоступен.")
         await query.edit_message_text(text=text, parse_mode='HTML')
+
         # Кнопка "Назад"
         back_button = [[InlineKeyboardButton("⬅️ Назад", callback_data='back_to_menu')]]
         await query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(back_button))
 
-
-# Кнопка "Назад"
+# Функция возврата в главное меню
 async def back_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-    await query.edit_message_text(text=INFO_TEXT['main'], parse_mode='HTML')
+    
+    # Отправляем главное меню
     keyboard = [
         [InlineKeyboardButton("ℹ️ Общая информация", callback_data='info')],
         [InlineKeyboardButton("🌍 Приоритет-2030", callback_data='project_2030')],
         [InlineKeyboardButton("🚆 Проезд", callback_data='travel')],
-        [InlineKeyboardButton("🏨 Проживание", callback_data='accommodation')],
+        [InlineKeyboardButton("Hotéis Проживание", callback_data='accommodation')],
         [InlineKeyboardButton("💶 Суточные", callback_data='daily_allowance')],
         [InlineKeyboardButton("📝 Конференция", callback_data='conference')],
         [InlineKeyboardButton("🧾 Страховка", callback_data='insurance')],
@@ -205,8 +208,9 @@ async def back_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("📄 Получить шаблоны документов", callback_data='templates')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    await query.edit_message_text(text=INFO_TEXT['main'], parse_mode='HTML')
     await query.edit_message_reply_markup(reply_markup=reply_markup)
-
 
 # Обработчик ошибок
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
@@ -214,9 +218,8 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
     if isinstance(update, Update) and update.effective_message:
         try:
             await update.effective_message.reply_text("Произошла ошибка. Пожалуйста, попробуйте снова.")
-        except Exception as send_error:
+        except Exception как send_error:
             logging.error(f"Не удалось отправить сообщение об ошибке: {send_error}")
-
 
 # Основная функция запуска бота
 def main():
@@ -229,7 +232,6 @@ def main():
 
     print("Бот запущен...")
     application.run_polling()
-
 
 if __name__ == '__main__':
     main()
