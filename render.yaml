@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: TheSmartMaterialsBot
+    envVars:
+      - key: TOKEN
+        value: <ваш_токен>
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    runtime: ubuntu2204-python-3.10.13
+    description: |
+      Бот работает через Telegram API. 
+      Предупреждение о портах можно игнорировать.
