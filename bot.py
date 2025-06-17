@@ -9,8 +9,8 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Получаем токен из переменной окружения
-TOKEN = os.getenv("TOKEN")  # или вставьте напрямую для тестирования: TOKEN = 'ваш_токен'
+# Токен бота
+TOKEN = "7668699787:AAHEL3Nhfmhy9GJwGyZVSUdRP4bKqUUIxCM"  # Новый токен
 
 # Структурированная информация
 INFO_TEXT = {
@@ -46,7 +46,7 @@ INFO_TEXT = {
     • Документы принимаются только при наличии всех подписей
     • Нарушение сроков предоставления информации → командировка не оформляется
     • Цель командировки должна соответствовать целям проекта
-    • Даты должны совпадать с датами по билетам
+    • Даты должны совпадать с билетами
     • Командировка не может совпадать с отпуском
     """,
 
@@ -69,7 +69,7 @@ INFO_TEXT = {
     • Выбор места в поезде
     • Билеты бизнес/первый класс
     • Сервисный сбор сторонних сервисов
-    • Питание и прочие услуги
+    • Питание и прочие дополнительные услуги
     """,
 
     'accommodation': """
@@ -159,7 +159,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(INFO_TEXT['main'], parse_mode='HTML', reply_markup=reply_markup)
 
-# Обработчик нажатий на кнопки
+# Обработчик кнопок
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -170,13 +170,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         try:
             with open('templates/Заявка.docm', 'rb') as file:
                 await query.message.reply_document(document=file, filename='Заявка.docm')
-            with open('templates/Авансовый_отчет.xlsx', 'rb') as file:
+            with open('templates/Авансовый_отчет.xlsx', 'rb') как file:
                 await query.message.reply_document(document=file, filename='Авансовый_отчет.xlsx')
-            with open('templates/Научный_отчет.docx', 'rb') as file:
+            with open('templates/Научный_отчет.docx', 'rb') как file:
                 await query.message.reply_document(document=file, filename='Научный_отчет.docx')
-            with open('templates/Заявление.docx', 'rb') as file:
+            with open('templates/Заявление.docx', 'rb') как file:
                 await query.message.reply_document(document=file, filename='Заявление.docx')
-        except Exception as e:
+        except Exception как e:
             await query.message.reply_text(f"Ошибка при отправке файлов: {e}")
 
     elif data == 'back_to_menu':
@@ -195,7 +195,7 @@ async def back_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     
-    # Отправляем главное меню
+    # Восстанавливаем главное меню
     keyboard = [
         [InlineKeyboardButton("ℹ️ Общая информация", callback_data='info')],
         [InlineKeyboardButton("🌍 Приоритет-2030", callback_data='project_2030')],
@@ -205,7 +205,7 @@ async def back_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("📝 Конференция", callback_data='conference')],
         [InlineKeyboardButton("🧾 Страховка", callback_data='insurance')],
         [InlineKeyboardButton("🛂 Виза", callback_data='visa')],
-        [InlineKeyboardButton("📄 Получить шаблоны документов", callback_data='templates')],
+        [InlineKeyboardButton("📄 Шаблоны документов", callback_data='templates')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
@@ -218,7 +218,7 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
     if isinstance(update, Update) and update.effective_message:
         try:
             await update.effective_message.reply_text("Произошла ошибка. Пожалуйста, попробуйте снова.")
-        except Exception as send_error:
+        except Exception как send_error:
             logging.error(f"Не удалось отправить сообщение об ошибке: {send_error}")
 
 # Основная функция запуска бота
