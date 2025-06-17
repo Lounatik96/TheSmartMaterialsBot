@@ -218,7 +218,7 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
     if isinstance(update, Update) and update.effective_message:
         try:
             await update.effective_message.reply_text("Произошла ошибка. Пожалуйста, попробуйте снова.")
-        except Exception как send_error:
+        except Exception as send_error:
             logging.error(f"Не удалось отправить сообщение об ошибке: {send_error}")
 
 # Основная функция запуска бота
